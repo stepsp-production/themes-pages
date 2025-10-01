@@ -1,0 +1,54 @@
+ماذا يحتوي؟
+
+App Router + Tailwind (UI عربية RTL).
+
+Prisma + Postgres مع مخطط جداول: Users, LayoutConfig, Content (JSON)، Approvals، Permissions، Settings (ticker)، LiveStream.
+
+NextAuth (Credentials/JWT) لتسجيل الدخول.
+
+صفحات:
+
+/ — رئيسية
+
+/sign-in, /sign-up
+
+/dashboard
+
+/dashboard/customize — تخصيص واجهة المستخدم (قوالب/أزرار/ألوان/مشغل فيديو/إعلانات)
+
+/dashboard/admin — تحرير محتوى + شريط أخبار + بث HLS (حسب الصلاحيات)
+
+/dashboard/owner — الموافقات (Approve/Reject)
+
+/dashboard/power — تعيين صلاحيات لمجموعة ADMIN
+
+واجهات API: auth, register, layout, content, approvals, permissions, settings (ticker), live (HLS).
+
+Seed جاهز ينشئ 3 حسابات:
+
+POWER_ADMIN: power@example.com / password123
+
+OWNER: owner1@example.com / password123
+
+ADMIN: admin1@example.com / password123
+
+تشغيل سريع محليًا
+# داخل المجلد بعد فك الضغط
+npm i
+# عدّل .env.local (انسخ من .env.example وضع DATABASE_URL و NEXTAUTH_SECRET)
+npx prisma migrate dev --name init
+npx prisma db seed
+npm run dev
+
+
+ثم افتح: http://localhost:3000
+
+نشر مجانًا (مقترح)
+
+ادفعه إلى GitHub ثم استورده في Vercel (خطة Hobby).
+
+أضف نفس متغيّرات البيئة الموجودة محليًا (DATABASE_URL, NEXTAUTH_URL, NEXTAUTH_SECRET).
+
+Deploy.
+
+لو تبغى أضيف صفحة واجهة المستخدم النهائية التي تُظهر المحتوى مع مشغّل HLS على نفس تنسيقات القوالب والأزرار التي اخترتها، أو أربط Stripe Test لترقية VIP فعليًا — أسويها لك الآن فوق هذا الهيكل.
