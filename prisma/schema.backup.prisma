@@ -1,0 +1,96 @@
+﻿generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  email     String  @unique
+  username  String  @unique
+  firstName String
+  lastName  String
+  password  String
+  role      Role    @default(USER)
+  isVIP     Boolean @default(false)
+
+  layout      LayoutConfig?
+  permissions Permission[]
+}
+
+enum Role {
+  USER
+  VIP
+  ADMIN
+  OWNER
+  POWER_ADMIN
+}
+
+model LayoutConfig {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  layout   String @default("TEMPLATE_A")
+  icons    String @default("ICONS_A")
+  theme    String @default("light")
+  uiColor  String @default("#ffffff")
+  btnColor String @default("#10B981")
+  player   String @default("PLAYER_A")
+  adStyle  String @default("AD_A")
+}
+
+model Content {
+  id        String @id @default(cuid())
+  heroTitle String
+  heroDesc  String
+  articles  Json?
+  videos    Json?
+  ads       Json?
+}
+
+model Approval {
+  id        String         @id @default(cuid())
+  title     String
+  byUserId  String
+  status    ApprovalStatus @default(PENDING)
+  createdAt DateTime       @default(now())
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Permission {
+  id     String         @id @default(cuid())
+  userId String
+  user   User           @relation(fields: [userId], references: [id])
+  name   PermissionName
+}
+
+enum PermissionName {
+  EDIT_CONTENT
+  ADD_BREAKING
+  EDIT_TICKER
+  ADD_LIVE
+  FULL_ADMIN
+}
+
+model Setting {
+  key   String @id
+  value Json
+}
+
+model LiveStream {
+  id    String @id @default(cuid())
+  title String
+  url   String
+}
